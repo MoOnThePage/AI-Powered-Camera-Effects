@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#101114">
+    <meta name="description" content="A little light, a little color. Explore live camera filters with Luma Studio.">
+    <title>Luma Studio — Camera Effects</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23101114'/%3E%3Cpath d='M9 22 16 8l7 14' fill='none' stroke='%23ddff88' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#home" aria-label="Luma Studio home">
+          <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span class="brand-name">luma<span>studio</span></span>
+        </a>
+        <div class="topbar-center"><span class="topbar-caption">YOUR CAMERA, REIMAGINED</span></div>
+        <div class="camera-status" id="camera-status" role="status" aria-live="polite">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="status-text">Camera is off</span>
+        </div>
+      </header>
+
+      <main id="home">
+        <section class="intro" aria-labelledby="page-title">
+          <div>
+            <p class="eyebrow"><span class="eyebrow-line"></span> A LITTLE LIGHT, A LITTLE COLOR</p>
+            <h1 id="page-title">Find your <span>feeling.</span></h1>
+          </div>
+          <p class="intro-note">Pick a mood. Make it yours.<br>See every shade in real time.</p>
+        </section>
+
+        <section class="studio" aria-label="Camera filter studio">
+          <div class="preview-column">
+            <div class="preview-frame" id="preview-frame">
+              <video id="camera-preview" autoplay playsinline muted aria-label="Live camera preview"></video>
+              <canvas id="pixel-preview" aria-hidden="true"></canvas>
+              <div class="preview-grain" aria-hidden="true"></div>
+              <div class="preview-topline">
+                <span class="live-badge"><span class="live-dot"></span><span id="live-label">PREVIEW</span></span>
+                <span class="preview-size">LIVE · <span id="preview-resolution">READY WHEN YOU ARE</span></span>
+              </div>
+              <div class="camera-placeholder" id="camera-placeholder">
+                <div class="placeholder-orbit orbit-one"></div>
+                <div class="placeholder-orbit orbit-two"></div>
+                <div class="placeholder-icon" aria-hidden="true">
+                  <svg viewBox="0 0 48 48" fill="none"><rect x="5.5" y="12.5" width="27" height="23" rx="5" stroke="currentColor" stroke-width="1.5"/><path d="m32.5 20 9-5v18l-9-5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="19" cy="24" r="5" stroke="currentColor" stroke-width="1.5"/></svg>
+                </div>
+                <p class="placeholder-title" id="placeholder-title">Your moment starts here</p>
+                <p class="placeholder-copy" id="placeholder-copy">Turn on your camera to see the magic.</p>
+                <button class="start-button" id="start-camera" type="button">
+                  <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7 4.5a1 1 0 0 0-1.5.87v9.26A1 1 0 0 0 7 15.5l7-4.63a1.05 1.05 0 0 0 0-1.74L7 4.5Z" fill="currentColor"/></svg>
+                  <span>Turn on camera</span>
+                </button>
+                <p class="secure-note" id="secure-note">Your camera stays right here on your device.</p>
+              </div>
+              <div class="preview-bottomline" aria-hidden="true">
+                <span class="corner-mark corner-left"></span><span class="frame-label">LUMA / 01</span><span class="corner-mark corner-right"></span>
+              </div>
+              <div class="capture-flash" id="capture-flash" aria-hidden="true"></div>
+            </div>
+
+            <div class="capture-bar">
+              <div class="capture-hint"><span class="hint-key">SPACE</span><span>to capture</span></div>
+              <button class="shutter-button" id="capture-photo" type="button" aria-label="Take a photo" disabled>
+                <span class="shutter-inner"></span>
+              </button>
+              <div class="capture-tools">
+                <button class="icon-button" id="switch-camera" type="button" aria-label="Switch camera" title="Switch camera" disabled>
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 9a7 7 0 0 1 11.6-2L20 9M4 15l2.9 2a7 7 0 0 0 11.6-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <button class="icon-button power-button" id="stop-camera" type="button" aria-label="Turn camera off" title="Turn camera off" disabled>
+                  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v9M7.05 5.85a8 8 0 1 0 9.9 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <aside class="filter-panel" aria-labelledby="filter-heading">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow panel-eyebrow">THE FILTER ROOM</p>
+                <h2 id="filter-heading">Choose a mood</h2>
+              </div>
+              <span class="filter-count">01 <span>/ 14</span></span>
+            </div>
+
+            <div class="filter-grid" role="group" aria-label="Camera filters">
+              <button class="filter-card is-selected" type="button" data-filter="original" aria-pressed="true">
+                <span class="filter-art art-original"><span class="art-sun"></span><span class="art-hill hill-back"></span><span class="art-hill hill-front"></span></span>
+                <span class="filter-name">Original</span><span class="filter-detail">JUST YOU</span>
+              </button>
+              <button class="filter-card" type="button" data-filter="golden" aria-pressed="false">
+                <span class="filter-art art-golden"><span class="art-sun"></span><span class="art-hill hill-back"></span><span class="art-hill hill-front"></span></span>
+                <span class="filter-name">Golden</span><span class="filter-detail">WARM &amp; SOFT</span>
+              </button>
+              <button class="filter-card" type="button" data-filter="rose" aria-pressed="false">
+                <span class="filter-art art-rose"><span class="art-sun"></span><span class="art-hill hill-back"></span><span class="art-hill hill-front"></span></span>
+                <span class="filter-name">Rosé</span><span class="filter-detail">A SOFTER SIDE</span>
+              </button>
+              <button class="filter-card" type="button" data-filter="film" aria-pressed="false">
+                <span class="filter-art art-film"><span class="art-sun"></span><span class="art-hill hill-back"></span><span class="art-hill hill-front"></span></span>
+                <span class="filter-name">35mm</span><span class="filter-detail">AFTER THE RAIN</span>
+              </button>
+              <button class="filter-card" type="button" data-filter="dream" aria-pressed="false">
+                <span class="filter-art art-dream"><span class="art-sun"></span><span class="art-hill hill-back"></span><span class="art-hill hill-front"></span></span>
+                <span class="filter-name">Daydream</span><span class="filter-detail">SOMEWHERE ELSE</span>
+              </button>
+              <button class="filter-card" type="button" data-filter="mono" aria-pressed="false">
+                <span class="filter-art art-mono"><span class="art-sun"></span><span class="art-hill hill-back"></span><span class="art-hill hill-front"></span></span>
+                <span class="filter-name">Noir</span><span class="filter-detail">BLACK &amp; WHITE</span>
+              </button>
+              <button class="filter-card" type="button" data-filter="pixel" aria-pressed="false">
+                <span class="filter-art art-pixel"><span class="art-sun"></span><span class="art-hill hill-back"></span><span class="art-hill hill-front"></span></span>
+                <span class="filter-name">Pixel</span><span class="filter-detail">BLOCK BY BLOCK</span>
+              </button>
+              <button class="filter-card" type="button" data-filter="halftone" aria-pressed="false">
+                <span class="filter-art art-halftone"><span class="art-sun"></span><span class="art-hill hill-back"></span><span class="art-hill hill-front"></span></span>
+                <span class="filter-name">Halftone</span><span class="filter-detail">INK &amp; LIGHT</span>
+              </button>
+              <button class="filter-card" type="button" data-filter="ascii" aria-pressed="false">
+                <span class="filter-art art-ascii" aria-hidden="true">0101<br>. , : * # M<br>0101</span>
+                <span class="filter-name">ASCII Terminal</span><span class="filter-detail">WORDS IN MOTION</span>
+              </button>
+              <button class="filter-card" type="button" data-filter="vhs" aria-pressed="false">
+                <span class="filter-art art-vhs"><span class="art-sun"></span><span class="art-hill hill-back"></span><span class="art-hill hill-front"></span><span class="vhs-art-label">REC ● 04:20:1994</span></span>
+                <span class="filter-name">VHS / 90s Broadcast</span><span class="filter-detail">ON THE AIR</span>
+              </button>
+              <button class="filter-card" type="button" data-filter="risograph" aria-pressed="false">
+                <span class="filter-art art-risograph"><span class="art-sun"></span><span class="art-hill hill-back"></span><span class="art-hill hill-front"></span></span>
+                <span class="filter-name">Risograph / Duotone</span><span class="filter-detail">TWO INKS, ONE MOOD</span>
+              </button>
+              <button class="filter-card" type="button" data-filter="blueprint" aria-pressed="false">
+                <span class="filter-art art-blueprint"><span class="art-sun"></span><span class="art-hill hill-back"></span><span class="art-hill hill-front"></span></span>
+                <span class="filter-name">Architectural Blueprint</span><span class="filter-detail">DRAWN IN LIGHT</span>
+              </button>
+              <button class="filter-card" type="button" data-filter="glitch" aria-pressed="false">
+                <span class="filter-art art-glitch"><span class="art-sun"></span><span class="art-hill hill-back"></span><span class="art-hill hill-front"></span></span>
+                <span class="filter-name">Prismatic Glitch</span><span class="filter-detail">OUT OF SYNC</span>
+              </button>
+              <button class="filter-card" type="button" data-filter="crt" aria-pressed="false">
+                <span class="filter-art art-crt"><span class="art-sun"></span><span class="art-hill hill-back"></span><span class="art-hill hill-front"></span></span>
+                <span class="filter-name">Phosphor CRT</span><span class="filter-detail">AFTER HOURS</span>
+              </button>
+            </div>
+
+            <div class="intensity-control">
+              <div class="intensity-label"><label for="intensity">Filter intensity</label><span id="intensity-value">100%</span></div>
+              <input id="intensity" type="range" min="0" max="100" value="100" aria-label="Filter intensity">
+              <div class="range-ends"><span>SUBTLE</span><span>FULL MOOD</span></div>
+            </div>
+
+            <div class="intensity-control pixel-size-control" id="pixel-size-control" hidden>
+              <div class="intensity-label"><label for="pixel-size">Pixel size</label><span id="pixel-size-value">12 px</span></div>
+              <input id="pixel-size" type="range" min="4" max="48" step="2" value="12" aria-label="Pixel size">
+              <div class="range-ends"><span>FINE</span><span>BLOCKY</span></div>
+            </div>
+
+            <div class="panel-footer"><span class="sparkle" aria-hidden="true">✳</span><span>Made for the light you're in.</span></div>
+          </aside>
+        </section>
+      </main>
+      <footer class="page-footer"><span>AN EXPERIMENT IN FEELING</span><span>MADE FOR YOUR MOMENTS <span class="footer-star">✳</span></span></footer>
+    </div>
+  </body>
+</html>
